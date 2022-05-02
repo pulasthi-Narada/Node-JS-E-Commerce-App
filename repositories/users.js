@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { parse } = require('path');
 
 class UsersRepository {
 	constructor(filename) {
@@ -14,7 +15,19 @@ class UsersRepository {
 		}
 	}
 
-//	async checkForFile() {}
+	async getAll() {
+		return JSON.parse( 
+			await fs.promises.readFile(this.filename, {
+				encoding: 'utf8'
+			})
+		);
+	}
 }
 
-const repo = new UsersRepository('users.json');
+async function test() {
+	const repo = new UsersRepository('users.json');
+
+	await repo.getAll();
+}
+
+test();

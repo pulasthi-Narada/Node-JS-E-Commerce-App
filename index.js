@@ -15,7 +15,6 @@ app.get('/', (req, res) => {
     <button>Sign Up</button>
   </form>
 </div>`);
-	console.log('get');
 });
 
 app.post('/', async (req, res) => {

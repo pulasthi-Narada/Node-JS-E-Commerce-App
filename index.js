@@ -9,13 +9,13 @@ const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
-	cookieSession({
-		keys: [ 'lkasld235j' ]
-	})
+  cookieSession({
+    keys: ['lkasld235j']
+  })
 );
 app.use(authRouter);
 app.use(productsRouter);
 
 app.listen(3000, () => {
-	console.log('Listening');
+  console.log('Listening');
 });

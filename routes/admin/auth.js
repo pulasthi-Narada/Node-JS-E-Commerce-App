@@ -60,7 +60,7 @@ router.post('/signin', [ requireEmailExists, requireValidPasswordForUser ], asyn
 
 router.get('/test', async (req, res) => {
 	try {
-		await usersRepo.getAll2();
+		await usersRepo.getAll();
 	} catch (e) {
 		throw new Error('ee');
 	}

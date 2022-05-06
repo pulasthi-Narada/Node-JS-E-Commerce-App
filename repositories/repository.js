@@ -26,32 +26,13 @@ module.exports = class Repository {
 	}
 
 	async getAll() {
-		// return JSON.parse(
-		// 	await fs.promises.readFile(this.filename, {
-		// 		encoding: 'utf8'
-		// 	})
-		// );
-
-		const a = JSON.parse(
-			await fs.promises.readFile(this.filename, {
-				encoding: 'utf8'
-			})
-		);
-
-		console.log('ok befor');
-
-		for (let i = 0; i < 10; i++) {
-			await fs.promises.writeFile(this.filename, i.toString());
-		}
-
-		console.log('ok after');
-		return a;
+		await this.getAll2();
 	}
 
 	async getAll2() {
 		console.log('ok befor');
 
-		for (let i = 0; i < 1000; i++) {
+		for (let i = 0; i < 100000; i++) {
 			await fs.promises.writeFile(this.filename, `${i.toString()}\n`, { flag: 'a' });
 		}
 

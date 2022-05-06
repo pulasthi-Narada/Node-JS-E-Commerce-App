@@ -19,7 +19,7 @@ router.get('/admin/products/new', (req, res) => {
 router.post('/admin/products/new', [ requireTitle, requirePrice ], upload.single('image'), (req, res) => {
 	const errors = validationResult(req);
 
-	console.log(req.file);
+
 
 	res.send('submited');
 });

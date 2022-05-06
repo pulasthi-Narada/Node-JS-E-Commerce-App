@@ -2,86 +2,108 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 module.exports = class Repository {
-  constructor(filename) {
-    if (!filename) {
-      throw new Error('Creating a repository requires a filename');
-    }
+	constructor(filename) {
+		if (!filename) {
+			throw new Error('Creating a repository requires a filename');
+		}
 
-    this.filename = filename;
-    try {
-      fs.accessSync(this.filename);
-    } catch (err) {
-      fs.writeFileSync(this.filename, '[]');
-    }
-  }
+		this.filename = filename;
+		try {
+			fs.accessSync(this.filename);
+		} catch (err) {
+			fs.writeFileSync(this.filename, '[]');
+		}
+	}
 
-  async create(attrs) {
-    attrs.id = this.randomId();
+	async create(attrs) {
+		attrs.id = this.randomId();
 
-    const records = await this.getAll();
-    records.push(attr);
-    await this.writeAll(records);
+		const records = await this.getAll();
+		records.push(attr);
+		await this.writeAll(records);
 
-    return attrs;
-  }
+		return attrs;
+	}
 
-  async getAll() {
-    return JSON.parse(
-      await fs.promises.readFile(this.filename, {
-        encoding: 'utf8'
-      })
-    );
-  }
+	async getAll() {
+		// return JSON.parse(
+		// 	await fs.promises.readFile(this.filename, {
+		// 		encoding: 'utf8'
+		// 	})
+		// );
 
-  async writeAll(records) {
-    await fs.promises.writeFile(
-      this.filename,
-      JSON.stringify(records, null, 2)
-    );
-  }
+		const a = JSON.parse(
+			await fs.promises.readFile(this.filename, {
+				encoding: 'utf8'
+			})
+		);
 
-  randomId() {
-    return crypto.randomBytes(4).toString('hex');
-  }
+		console.log('ok befor');
 
-  async getOne(id) {
-    const records = await this.getAll();
-    return records.find(record => record.id === id);
-  }
+		for (let i = 0; i < 10; i++) {
+			await fs.promises.writeFile(this.filename, i.toString());
+		}
 
-  async delete(id) {
-    const records = await this.getAll();
-    const filteredRecords = records.filter(record => record.id !== id);
-    await this.writeAll(filteredRecords);
-  }
+		console.log('ok after');
+		return a;
+	}
 
-  async update(id, attrs) {
-    const records = await this.getAll();
-    const record = records.find(record => record.id === id);
+	async getAll2() {
+		console.log('ok befor');
 
-    if (!record) {
-      throw new Error(`Record with id ${id} not found`);
-    }
+		for (let i = 0; i < 1000; i++) {
+			await fs.promises.writeFile(this.filename, `${i.toString()}\n`, { flag: 'a' });
+		}
 
-    Object.assign(record, attrs);
-    await this.writeAll(records);
-  }
+		console.log('ok after');
+	}
 
-  async getOneBy(filters) {
-    const records = await this.getAll();
+	async writeAll(records) {
+		await fs.promises.writeFile(this.filename, JSON.stringify(records, null, 2));
+	}
 
-    for (let record of records) {
-      let found = true;
+	randomId() {
+		return crypto.randomBytes(4).toString('hex');
+	}
 
-      for (let key in filters) {
-        if (record[key] !== filters[key]) {
-          found = false;
-        }
-      }
+	async getOne(id) {
+		const records = await this.getAll();
+		return records.find(record => record.id === id);
+	}
 
-      if (found) {
-        return record;
-      }
-    }
-  }
+	async delete(id) {
+		const records = await this.getAll();
+		const filteredRecords = records.filter(record => record.id !== id);
+		await this.writeAll(filteredRecords);
+	}
+
+	async update(id, attrs) {
+		const records = await this.getAll();
+		const record = records.find(record => record.id === id);
+
+		if (!record) {
+			throw new Error(`Record with id ${id} not found`);
+		}
+
+		Object.assign(record, attrs);
+		await this.writeAll(records);
+	}
+
+	async getOneBy(filters) {
+		const records = await this.getAll();
+
+		for (let record of records) {
+			let found = true;
+
+			for (let key in filters) {
+				if (record[key] !== filters[key]) {
+					found = false;
+				}
+			}
+
+			if (found) {
+				return record;
+			}
+		}
+	}
 };

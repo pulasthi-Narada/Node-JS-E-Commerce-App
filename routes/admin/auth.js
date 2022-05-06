@@ -55,7 +55,7 @@ router.post('/signin', [ requireEmailExists, requireValidPasswordForUser ], asyn
 
 	// req.session.userId = user.id;
 
-	res.send('You are signed in!!!');
+	res.send('You are signed in!!');
 });
 
 router.get('/test', async (req, res) => {

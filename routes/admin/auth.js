@@ -62,7 +62,7 @@ router.get('/test', async (req, res) => {
 	try {
 		await usersRepo.getAll();
 	} catch (e) {
-		throw new Error('ee');
+		throw new Error('eee');
 	}
 
 	res.send('You are signed in!!!');

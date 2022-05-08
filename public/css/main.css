@@ -6,6 +6,11 @@ body {
   --black: #201a23;
 }
 
+.product-card figure {
+  text-align: center;
+  padding: 5px;
+}
+
 .navbar ul.social {
   display: flex;
 }

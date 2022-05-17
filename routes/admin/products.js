@@ -32,7 +32,7 @@ router.post(
     await productsRepo.create({ title, price, image });
 
     res.redirect('/admin/products');
-  }
+  },
 );
 
 router.get('/admin/products/:id/edit', requireAuth, async (req, res) => {
@@ -50,7 +50,7 @@ router.post(
   requireAuth,
   upload.single('image'),
   [requireTitle, requirePrice],
-  handleErrors(productsEditTemplate, async req => {
+  handleErrors(productsEditTemplate, async (req) => {
     const product = await productsRepo.getOne(req.params.id);
     return { product };
   }),
@@ -68,7 +68,7 @@ router.post(
     }
 
     res.redirect('/admin/products');
-  }
+  },
 );
 
 router.post('/admin/products/:id/delete', requireAuth, async (req, res) => {

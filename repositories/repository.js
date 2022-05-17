@@ -4,7 +4,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 
-module.exports = class Repository {
+module.exports = class Repository { 
   constructor(model) {
     if (!model) {
       throw new Error('Creating a repository requires a model');
@@ -12,11 +12,6 @@ module.exports = class Repository {
 
     this.filename = model;
     this.model = model;
-    // try {
-    //   fs.accessSync(this.filename);
-    // } catch (err) {
-    //   fs.writeFileSync(this.filename, '[]');
-    // }
 
     mongoose.connect(process.env.DATABASE_URL);
     const db = mongoose.connection;
@@ -35,11 +30,13 @@ module.exports = class Repository {
   }
 
   async getAll() {
-    return JSON.parse(
-      await fs.promises.readFile(this.filename, {
-        encoding: 'utf8',
-      }),
-    );
+    const records = await this.model.find();
+    return records;
+    // return JSON.parse(
+    //   await fs.promises.readFile(this.filename, {
+    //     encoding: 'utf8',
+    //   }),
+    // );
   }
 
   async writeAll(records) {
@@ -47,10 +44,6 @@ module.exports = class Repository {
       this.filename,
       JSON.stringify(records, null, 2),
     );
-  }
-
-  randomId() {
-    return crypto.randomBytes(4).toString('hex');
   }
 
   async getOne(id) {
@@ -76,23 +69,6 @@ module.exports = class Repository {
     await this.writeAll(records);
   }
 
-  // async getOneBy(filters) {
-  //   const records = await this.getAll();
-
-  //   for (let record of records) {
-  //     let found = true;
-
-  //     for (let key in filters) {
-  //       if (record[key] !== filters[key]) {
-  //         found = false;
-  //       }
-  //     }
-
-  //     if (found) {
-  //       return record;
-  //     }
-  //   }
-  // }
   async getOneBy(filter) {
     let record;
 

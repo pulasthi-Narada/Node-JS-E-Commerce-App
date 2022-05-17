@@ -53,11 +53,16 @@ router.post(
   async (req, res) => {
     const { email } = req.body;
 
-    const user = await usersRepo.getOneBy({ email });
+    try {
+      const user = await usersRepo.getOneBy({ email });
 
-    req.session.userId = user[0].id;
+      req.session.userId = user[0].id;
 
-    res.redirect('/admin/products');
+      res.redirect('/admin/products');
+    } catch (e) {
+      res.status(500).send(e);
+      throw new Error(e);
+    }
   },
 );
 

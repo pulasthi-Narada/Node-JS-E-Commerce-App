@@ -47,8 +47,12 @@ module.exports = class Repository {
   }
 
   async getOne(id) {
-    const records = await this.getAll();
-    return records.find((record) => record.id === id);
+    const record = await this.model.findById(id);
+
+    if (record) {
+      return record;
+    }
+    return false;
   }
 
   async delete(id) {

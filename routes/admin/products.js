@@ -12,8 +12,13 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.get('/admin/products', requireAuth, async (req, res) => {
-  const products = await productsRepo.getAll();
-  res.send(productsIndexTemplate({ products }));
+  try {
+    const products = await productsRepo.getAll();
+    res.send(productsIndexTemplate({ products }));
+  } catch (e) {
+    res.status(500).send(e);
+    throw new Error(e);
+  }
 });
 
 router.get('/admin/products/new', requireAuth, (req, res) => {
@@ -29,20 +34,29 @@ router.post(
   async (req, res) => {
     const image = req.file.buffer.toString('base64');
     const { title, price } = req.body;
-    await productsRepo.create({ title, price, image });
 
-    res.redirect('/admin/products');
+    try {
+      await productsRepo.create({ title, price, image });
+
+      res.redirect('/admin/products');
+    } catch (e) {
+      res.status(400).send(e);
+      throw new Error(e);
+    }
   },
 );
 
 router.get('/admin/products/:id/edit', requireAuth, async (req, res) => {
-  const product = await productsRepo.getOne(req.params.id);
+  try {
+    const product = await productsRepo.getOne(req.params.id);
 
-  if (!product) {
-    return res.send('Product not found');
+    if (!product) {
+      return res.send('Product not found');
+    }
+    res.send(productsEditTemplate({ product }));
+  } catch (e) {
+    res.status(500).send(e);
   }
-
-  res.send(productsEditTemplate({ product }));
 });
 
 router.post(

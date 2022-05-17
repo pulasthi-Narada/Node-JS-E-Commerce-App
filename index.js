@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
@@ -10,8 +11,7 @@ const cors = require('cors');
 const app = express();
 
 const corsOptions = {
-  origin: 'http://127.0.0.1:5500',
-  methods: ['put'],
+  origin: process.env.ORIGIN,
 };
 
 app.use(cors(corsOptions));

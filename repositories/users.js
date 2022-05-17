@@ -24,7 +24,7 @@ class UsersRepository extends Repository {
     const records = await this.getAll();
     const record = {
       ...attrs,
-      password: `${buf.toString('hex')}.${salt}`
+      password: `${buf.toString('hex')}.${salt}`,
     };
     records.push(record);
 

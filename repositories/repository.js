@@ -1,5 +1,8 @@
+require('dotenv').config();
+
 const fs = require('fs');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 
 module.exports = class Repository {
   constructor(filename) {
@@ -13,6 +16,11 @@ module.exports = class Repository {
     } catch (err) {
       fs.writeFileSync(this.filename, '[]');
     }
+
+    mongoose.connect(process.env.DATABASE_URL);
+    const db = mongoose.connection;
+    db.on('error', (e) => console.error(e));
+    // db.once('open', () => console.error('conected to DB!'));
   }
 
   async create(attrs) {
@@ -28,15 +36,15 @@ module.exports = class Repository {
   async getAll() {
     return JSON.parse(
       await fs.promises.readFile(this.filename, {
-        encoding: 'utf8'
-      })
+        encoding: 'utf8',
+      }),
     );
   }
 
   async writeAll(records) {
     await fs.promises.writeFile(
       this.filename,
-      JSON.stringify(records, null, 2)
+      JSON.stringify(records, null, 2),
     );
   }
 
@@ -46,18 +54,18 @@ module.exports = class Repository {
 
   async getOne(id) {
     const records = await this.getAll();
-    return records.find(record => record.id === id);
+    return records.find((record) => record.id === id);
   }
 
   async delete(id) {
     const records = await this.getAll();
-    const filteredRecords = records.filter(record => record.id !== id);
+    const filteredRecords = records.filter((record) => record.id !== id);
     await this.writeAll(filteredRecords);
   }
 
   async update(id, attrs) {
     const records = await this.getAll();
-    const record = records.find(record => record.id === id);
+    const record = records.find((record) => record.id === id);
 
     if (!record) {
       throw new Error(`Record with id ${id} not found`);

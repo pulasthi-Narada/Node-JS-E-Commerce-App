@@ -4,12 +4,13 @@ const { handleErrors } = require('./middlewares');
 const usersRepo = require('../../repositories/users');
 const signupTemplate = require('../../views/admin/auth/signup');
 const signinTemplate = require('../../views/admin/auth/signin');
+
 const {
   requireEmail,
   requirePassword,
   requirePasswordConfirmation,
   requireEmailExists,
-  requireValidPasswordForUser
+  requireValidPasswordForUser,
 } = require('./validators');
 
 const router = express.Router();
@@ -29,7 +30,7 @@ router.post(
     req.session.userId = user.id;
 
     res.redirect('/admin/products');
-  }
+  },
 );
 
 router.get('/signout', (req, res) => {
@@ -53,7 +54,7 @@ router.post(
     req.session.userId = user.id;
 
     res.redirect('/admin/products');
-  }
+  },
 );
 
 module.exports = router;

@@ -4,7 +4,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 
-module.exports = class Repository { 
+module.exports = class Repository {
   constructor(model) {
     if (!model) {
       throw new Error('Creating a repository requires a model');
@@ -20,23 +20,23 @@ module.exports = class Repository {
   }
 
   async create(attrs) {
-    attrs.id = this.randomId();
+    // attrs.id = this.randomId();
 
-    const records = await this.getAll();
-    records.push(attrs);
-    await this.writeAll(records);
+    // const records = await this.getAll();
+    // records.push(attrs);
+    // await this.writeAll(records);
 
-    return attrs;
+    // return attrs;
+
+    const item = new this.model(attrs);
+
+    const newItem = await item.save();
+    return newItem;
   }
 
   async getAll() {
     const records = await this.model.find();
     return records;
-    // return JSON.parse(
-    //   await fs.promises.readFile(this.filename, {
-    //     encoding: 'utf8',
-    //   }),
-    // );
   }
 
   async writeAll(records) {

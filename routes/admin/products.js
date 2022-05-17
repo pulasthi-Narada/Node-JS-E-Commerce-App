@@ -77,18 +77,20 @@ router.post(
 
     try {
       await productsRepo.update(req.params.id, changes);
+      res.redirect('/admin/products');
     } catch (err) {
-      return res.send('Could not find item');
+      return res.status(400).send(err.message);
     }
-
-    res.redirect('/admin/products');
   },
 );
 
 router.post('/admin/products/:id/delete', requireAuth, async (req, res) => {
-  await productsRepo.delete(req.params.id);
-
-  res.redirect('/admin/products');
+  try {
+    await productsRepo.delete(req.params.id);
+    res.redirect('/admin/products');
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
 });
 
 module.exports = router;

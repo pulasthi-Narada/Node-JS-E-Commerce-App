@@ -10,7 +10,6 @@ module.exports = class Repository {
       throw new Error('Creating a repository requires a model');
     }
 
-    this.filename = model;
     this.model = model;
 
     mongoose.connect(process.env.DATABASE_URL);
@@ -20,14 +19,6 @@ module.exports = class Repository {
   }
 
   async create(attrs) {
-    // attrs.id = this.randomId();
-
-    // const records = await this.getAll();
-    // records.push(attrs);
-    // await this.writeAll(records);
-
-    // return attrs;
-
     const item = new this.model(attrs);
 
     const newItem = await item.save();
@@ -37,13 +28,6 @@ module.exports = class Repository {
   async getAll() {
     const records = await this.model.find();
     return records;
-  }
-
-  async writeAll(records) {
-    await fs.promises.writeFile(
-      this.filename,
-      JSON.stringify(records, null, 2),
-    );
   }
 
   async getOne(id) {
@@ -60,13 +44,7 @@ module.exports = class Repository {
   }
 
   async update(id, attrs) {
-    const record = await this.getOne(id);
-
-    await this.model.updateOne(attrs);
-
-    if (!record) {
-      throw new Error(`Record with id ${id} not found`);
-    }
+    await this.model.findByIdAndUpdate(id, attrs);
   }
 
   async getOneBy(filter) {

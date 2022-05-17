@@ -5,17 +5,18 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 
 module.exports = class Repository {
-  constructor(filename) {
-    if (!filename) {
-      throw new Error('Creating a repository requires a filename');
+  constructor(model) {
+    if (!model) {
+      throw new Error('Creating a repository requires a model');
     }
 
-    this.filename = filename;
-    try {
-      fs.accessSync(this.filename);
-    } catch (err) {
-      fs.writeFileSync(this.filename, '[]');
-    }
+    this.filename = model;
+    this.model = model;
+    // try {
+    //   fs.accessSync(this.filename);
+    // } catch (err) {
+    //   fs.writeFileSync(this.filename, '[]');
+    // }
 
     mongoose.connect(process.env.DATABASE_URL);
     const db = mongoose.connection;
@@ -75,21 +76,35 @@ module.exports = class Repository {
     await this.writeAll(records);
   }
 
-  async getOneBy(filters) {
-    const records = await this.getAll();
+  // async getOneBy(filters) {
+  //   const records = await this.getAll();
 
-    for (let record of records) {
-      let found = true;
+  //   for (let record of records) {
+  //     let found = true;
 
-      for (let key in filters) {
-        if (record[key] !== filters[key]) {
-          found = false;
-        }
-      }
+  //     for (let key in filters) {
+  //       if (record[key] !== filters[key]) {
+  //         found = false;
+  //       }
+  //     }
 
-      if (found) {
+  //     if (found) {
+  //       return record;
+  //     }
+  //   }
+  // }
+  async getOneBy(filter) {
+    let record;
+
+    try {
+      record = await this.model.find(filter);
+
+      if (record.length) {
         return record;
       }
+      return false;
+    } catch (err) {
+      throw new Error(err);
     }
   }
 };

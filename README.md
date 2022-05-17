@@ -2,6 +2,9 @@
 
 This project is small E-Commerce-App
 
+Demo of this project:
+https://node-js-e-commerce-app.herokuapp.com
+
 use technology
 
 Node js (express)

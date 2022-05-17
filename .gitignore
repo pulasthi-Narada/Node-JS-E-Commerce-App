@@ -3,3 +3,4 @@ products.json
 /node_modules 
 .eslintrc.json
 carts.json
+.env

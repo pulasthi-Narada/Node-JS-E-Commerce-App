@@ -55,7 +55,7 @@ router.get('/admin/products/:id/edit', requireAuth, async (req, res) => {
     }
     res.send(productsEditTemplate({ product }));
   } catch (e) {
-    res.status(500).send(e);
+    res.status(400).send(e.message);
   }
 });
 
